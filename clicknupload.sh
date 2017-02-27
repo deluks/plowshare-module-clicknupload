@@ -40,6 +40,7 @@ clicknupload_download() {
 		-d 'method_free="Free Download >>"' \
 		"$URL") || return
 	FILE_URL=$(parse_attr 'id="downloadbtn"' 'onClick' <<< "$PAGE") || return
+	log_debug("$FILE_URL")
 	FILE_URL=$(parse . "window.open(\'\(.*\)\');" <<< "$PAGE") || return
 
     echo "$FILE_URL"
