@@ -36,13 +36,13 @@ clicknupload_download() {
     FILE_NAME=$(parse_form_input_by_name 'fname' <<< "$PAGE")
 
     PAGE=$(curl -L -d 'op=download2&referrer&rand' \
-			-d "id=$URL_ID" \
-			-d 'method_free="Free Download >>"' \
-			"$URL") || return
-		FILE_URL=$(parse_attr 'id="downloadbtn"' 'onClick' <<< "$PAGE") || return
-		log_debug	"$FILE_URL"
-		FILE_URL=$(parse '.' "window.open('\(.*\)');" <<< "$FILE_URL") || return
-		log_debug "$FILE_URL"
+        -d "id=$URL_ID" \
+        -d 'method_free="Free Download >>"' \
+        "$URL") || return
+    FILE_URL=$(parse_attr 'id="downloadbtn"' 'onClick' <<< "$PAGE") || return
+    log_debug	"$FILE_URL"
+    FILE_URL=$(parse '.' "window.open('\(.*\)');" <<< "$FILE_URL") || return
+    log_debug "$FILE_URL"
 
     echo "$FILE_URL"
     echo "$FILE_NAME"
