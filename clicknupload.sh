@@ -31,16 +31,22 @@ clicknupload_download() {
     local PAGE FILE_URL FILE_NAME URL_ID
 
     PAGE=$(curl -L "$URL") || return
-    # download available?
+    
+    # File not Found?
+    if match 'File Not Found' "$PAGE"; then
+        return $ERR_LINK_DEAD
+    fi
+    
+    # Extract URL-ID and Filename
     URL_ID=$(parse_form_input_by_name 'id' <<< "$PAGE")
     FILE_NAME=$(parse_form_input_by_name 'fname' <<< "$PAGE")
-
+    
+    # Extract direct download link
     PAGE=$(curl -L -d 'op=download2&referrer&rand' \
         -d "id=$URL_ID" \
         -d 'method_free="Free Download >>"' \
         "$URL") || return
     FILE_URL=$(parse_attr 'id="downloadbtn"' 'onClick' <<< "$PAGE") || return
-    log_debug	"$FILE_URL"
     FILE_URL=$(parse '.' "window.open('\(.*\)');" <<< "$FILE_URL") || return
     log_debug "$FILE_URL"
 
